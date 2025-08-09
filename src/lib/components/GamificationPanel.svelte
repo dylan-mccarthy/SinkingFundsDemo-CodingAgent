@@ -98,31 +98,31 @@
 				<div class="flex items-center space-x-2">
 					<span class="text-2xl">{getLevelBadge(gamificationData.overall.level)}</span>
 					<div>
-						<div class="font-semibold text-gray-800">
+						<div class="font-semibold text-gray-800 dark:text-gray-200">
 							Level {gamificationData.overall.level}
 							{getLevelTitle(gamificationData.overall.level)}
 						</div>
-						<div class="text-sm text-gray-600">
+						<div class="text-sm text-gray-600 dark:text-gray-400">
 							Total: ${(gamificationData.overall.totalBalance / 100).toFixed(2)}
 						</div>
 					</div>
 				</div>
 				<div class="text-right">
-					<div class="text-sm text-gray-600">Next Level</div>
-					<div class="text-sm font-semibold">
+					<div class="text-sm text-gray-600 dark:text-gray-400">Next Level</div>
+					<div class="text-sm font-semibold text-gray-800 dark:text-gray-200">
 						${(gamificationData.overall.nextLevelAt / 100).toFixed(2)}
 					</div>
 				</div>
 			</div>
 
 			<!-- Level Progress Bar -->
-			<div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+			<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
 				<div
 					class="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
 					style="width: {gamificationData.overall.levelProgress}%"
 				></div>
 			</div>
-			<div class="text-xs text-gray-500 mt-1 text-right">
+			<div class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
 				{gamificationData.overall.levelProgress.toFixed(1)}% to next level
 			</div>
 		</div>
@@ -130,43 +130,43 @@
 		<!-- Stats Row -->
 		<div class="grid grid-cols-3 gap-4 mb-4" transition:fly={{ y: 20, duration: 300, delay: 100 }}>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-purple-600">
+				<div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
 					{gamificationData.overall.currentStreak}
 				</div>
-				<div class="text-xs text-gray-600">Month Streak</div>
+				<div class="text-xs text-gray-600 dark:text-gray-400">Month Streak</div>
 			</div>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-blue-600">{gamificationData.badges.length}</div>
-				<div class="text-xs text-gray-600">Badges Earned</div>
+				<div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{gamificationData.badges.length}</div>
+				<div class="text-xs text-gray-600 dark:text-gray-400">Badges Earned</div>
 			</div>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-green-600">
+				<div class="text-2xl font-bold text-green-600 dark:text-green-400">
 					{gamificationData.overall.goalsReached}/{gamificationData.overall.totalGoals}
 				</div>
-				<div class="text-xs text-gray-600">Goals Reached</div>
+				<div class="text-xs text-gray-600 dark:text-gray-400">Goals Reached</div>
 			</div>
 		</div>
 
 		<!-- Badges -->
 		{#if showBadges}
-			<div class="mt-4 border-t border-purple-200 pt-4" transition:fly={{ y: 20, duration: 300 }}>
-				<h4 class="text-sm font-semibold text-gray-700 mb-3">🏆 Badges Earned</h4>
+			<div class="mt-4 border-t border-purple-200 dark:border-purple-600 pt-4" transition:fly={{ y: 20, duration: 300 }}>
+				<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">🏆 Badges Earned</h4>
 				{#if gamificationData.badges.length === 0}
-					<div class="text-sm text-gray-500 text-center py-4">
+					<div class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
 						No badges earned yet. Keep saving to unlock achievements!
 					</div>
 				{:else}
 					<div class="grid grid-cols-2 gap-2">
 						{#each gamificationData.badges as badge, index}
 							<div
-								class="bg-white rounded-lg p-3 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+								class="bg-white dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md transition-shadow"
 								transition:scale={{ delay: index * 100, duration: 300 }}
 							>
 								<div class="flex items-center space-x-2">
 									<span class="text-2xl">{badge.emoji}</span>
 									<div>
-										<div class="text-sm font-semibold text-gray-800">{badge.name}</div>
-										<div class="text-xs text-gray-600">{badge.description}</div>
+										<div class="text-sm font-semibold text-gray-800 dark:text-gray-200">{badge.name}</div>
+										<div class="text-xs text-gray-600 dark:text-gray-400">{badge.description}</div>
 									</div>
 								</div>
 							</div>
@@ -179,19 +179,19 @@
 		<!-- Fund Level Indicators (Mini) -->
 		{#if gamificationData.funds.length > 0}
 			<div
-				class="mt-4 border-t border-purple-200 pt-4"
+				class="mt-4 border-t border-purple-200 dark:border-purple-600 pt-4"
 				transition:fly={{ y: 20, duration: 300, delay: 200 }}
 			>
-				<h4 class="text-sm font-semibold text-gray-700 mb-2">Fund Levels</h4>
+				<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fund Levels</h4>
 				<div class="space-y-2">
 					{#each gamificationData.funds as fundData}
 						<div class="flex items-center justify-between text-sm">
 							<div class="flex items-center space-x-2">
 								<span class="text-lg">{getLevelBadge(fundData.level)}</span>
-								<span class="text-gray-700">{fundData.fundName}</span>
+								<span class="text-gray-700 dark:text-gray-300">{fundData.fundName}</span>
 							</div>
 							<div class="flex items-center space-x-2">
-								<span class="text-gray-600">L{fundData.level}</span>
+								<span class="text-gray-600 dark:text-gray-400">L{fundData.level}</span>
 								{#if fundData.currentStreak > 0}
 									<span class="text-orange-500">🔥{fundData.currentStreak}</span>
 								{/if}
@@ -203,7 +203,7 @@
 		{/if}
 	</div>
 {:else}
-	<div class="bg-gray-50 rounded-2xl p-6 text-center">
-		<div class="text-gray-500">Unable to load progress data</div>
+	<div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center">
+		<div class="text-gray-500 dark:text-gray-400">Unable to load progress data</div>
 	</div>
 {/if}

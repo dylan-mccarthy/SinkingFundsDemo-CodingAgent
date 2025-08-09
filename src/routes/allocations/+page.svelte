@@ -169,30 +169,30 @@
 
 <div class="container mx-auto px-4 py-8">
 	<header class="mb-8">
-		<h1 class="text-3xl font-bold text-gray-900 mb-2">Allocation Rules</h1>
-		<p class="text-gray-600">Configure how your monthly deposits are allocated to funds</p>
+		<h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Allocation Rules</h1>
+		<p class="text-gray-600 dark:text-gray-300">Configure how your monthly deposits are allocated to funds</p>
 	</header>
 
 	{#if loading}
-		<div class="bg-gray-50 rounded-lg p-8 text-center">
-			<p class="text-gray-500">Loading allocation rules...</p>
+		<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
+			<p class="text-gray-500 dark:text-gray-400">Loading allocation rules...</p>
 		</div>
 	{:else}
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 			<!-- Rules Editor -->
 			<div class="space-y-6">
-				<div class="bg-white rounded-lg shadow-md p-6">
-					<h2 class="text-xl font-semibold text-gray-800 mb-4">Fund Allocation Rules</h2>
+				<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Fund Allocation Rules</h2>
 
 					<div class="space-y-4">
 						{#each allocationRules as rule, index}
 							{@const fund = funds.find((f) => f.id === rule.fundId)}
 							{#if fund}
-								<div class="border rounded-lg p-4 bg-gray-50">
+								<div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700">
 									<div class="flex items-center justify-between mb-3">
 										<div class="flex items-center space-x-2">
 											<span class="text-2xl">{fund.icon}</span>
-											<h3 class="font-medium text-gray-800">{fund.name}</h3>
+											<h3 class="font-medium text-gray-800 dark:text-white">{fund.name}</h3>
 										</div>
 										<label class="flex items-center">
 											<input
@@ -201,17 +201,17 @@
 												on:change={() => updateRuleValue(index, 'active', rule.active)}
 												class="mr-2"
 											/>
-											<span class="text-sm text-gray-600">Active</span>
+											<span class="text-sm text-gray-600 dark:text-gray-300">Active</span>
 										</label>
 									</div>
 
 									<div class="grid grid-cols-2 gap-4">
 										<div>
-											<label class="block text-sm font-medium text-gray-700 mb-1">Mode</label>
+											<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode</label>
 											<select
 												bind:value={rule.mode}
 												on:change={() => updateRuleValue(index, 'mode', rule.mode)}
-												class="w-full rounded-md border-gray-300 shadow-sm"
+												class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
 											>
 												<option value="percent">Percentage</option>
 												<option value="fixed">Fixed Amount</option>
@@ -221,7 +221,7 @@
 
 										{#if rule.mode === 'percent'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 mb-1"
+												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
 													>Percentage</label
 												>
 												<div class="flex items-center">
@@ -237,16 +237,16 @@
 																'percentBp',
 																parseFloat(e.target.value) * 100 || 0
 															)}
-														class="w-full rounded-md border-gray-300 shadow-sm"
+														class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
 													/>
-													<span class="ml-2 text-gray-500">%</span>
+													<span class="ml-2 text-gray-500 dark:text-gray-400">%</span>
 												</div>
 											</div>
 										{:else if rule.mode === 'fixed'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
 												<div class="flex items-center">
-													<span class="text-gray-500 mr-1">$</span>
+													<span class="text-gray-500 dark:text-gray-400 mr-1">$</span>
 													<input
 														type="number"
 														min="0"
@@ -258,19 +258,19 @@
 																'fixedCents',
 																Math.round(parseFloat(e.target.value) * 100) || 0
 															)}
-														class="w-full rounded-md border-gray-300 shadow-sm"
+														class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
 													/>
 												</div>
 											</div>
 										{:else if rule.mode === 'priority'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priority</label>
 												<input
 													type="number"
 													min="1"
 													bind:value={rule.priority}
 													on:change={() => updateRuleValue(index, 'priority', rule.priority)}
-													class="w-full rounded-md border-gray-300 shadow-sm"
+													class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
 												/>
 											</div>
 										{/if}
@@ -294,19 +294,19 @@
 
 			<!-- Preview Panel -->
 			<div class="space-y-6">
-				<div class="bg-white rounded-lg shadow-md p-6">
-					<h2 class="text-xl font-semibold text-gray-800 mb-4">Allocation Preview</h2>
+				<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Allocation Preview</h2>
 
 					<div class="mb-4">
-						<label class="block text-sm font-medium text-gray-700 mb-2">Deposit Amount</label>
+						<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deposit Amount</label>
 						<div class="flex items-center">
-							<span class="text-gray-500 mr-2">$</span>
+							<span class="text-gray-500 dark:text-gray-400 mr-2">$</span>
 							<input
 								type="number"
 								min="0"
 								step="0.01"
 								bind:value={depositAmount}
-								class="flex-1 rounded-md border-gray-300 shadow-sm"
+								class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
 								placeholder="1000.00"
 							/>
 						</div>
@@ -314,38 +314,38 @@
 
 					{#if preview}
 						<div class="space-y-3">
-							<div class="bg-blue-50 rounded-lg p-4">
-								<div class="text-sm text-gray-600 mb-2">Total Deposit</div>
-								<div class="text-2xl font-bold text-blue-600">
+							<div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+								<div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Total Deposit</div>
+								<div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
 									${(preview.depositCents / 100).toFixed(2)}
 								</div>
 							</div>
 
 							{#each preview.allocations as allocation}
-								<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+								<div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
 									<div class="flex items-center space-x-2">
 										<span class="text-xl">{getFundIcon(allocation.fundId)}</span>
-										<span class="font-medium">{allocation.fundName}</span>
-										<span class="text-xs bg-gray-200 px-2 py-1 rounded text-gray-600">
+										<span class="font-medium text-gray-800 dark:text-white">{allocation.fundName}</span>
+										<span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded text-gray-600 dark:text-gray-300">
 											{allocation.mode}
 											{#if allocation.percentBp}
 												({(allocation.percentBp / 100).toFixed(1)}%)
 											{/if}
 										</span>
 									</div>
-									<div class="font-semibold text-green-600">
+									<div class="font-semibold text-green-600 dark:text-green-400">
 										${(allocation.amountCents / 100).toFixed(2)}
 									</div>
 								</div>
 							{/each}
 
-							<div class="border-t pt-3 mt-4">
+							<div class="border-t border-gray-200 dark:border-gray-600 pt-3 mt-4">
 								<div class="flex justify-between text-sm">
-									<span>Total Allocated:</span>
-									<span class="font-semibold">${(preview.totalAllocated / 100).toFixed(2)}</span>
+									<span class="text-gray-700 dark:text-gray-300">Total Allocated:</span>
+									<span class="font-semibold text-gray-900 dark:text-white">${(preview.totalAllocated / 100).toFixed(2)}</span>
 								</div>
 								{#if preview.remainingAmount > 0}
-									<div class="flex justify-between text-sm text-orange-600">
+									<div class="flex justify-between text-sm text-orange-600 dark:text-orange-400">
 										<span>Remaining:</span>
 										<span class="font-semibold">${(preview.remainingAmount / 100).toFixed(2)}</span>
 									</div>
@@ -362,7 +362,7 @@
 							</button>
 						</div>
 					{:else}
-						<div class="text-center text-gray-500 py-8">Enter a deposit amount to see preview</div>
+						<div class="text-center text-gray-500 dark:text-gray-400 py-8">Enter a deposit amount to see preview</div>
 					{/if}
 				</div>
 			</div>
