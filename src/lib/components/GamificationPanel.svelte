@@ -70,21 +70,23 @@
 {/if}
 
 {#if loading}
-	<div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100">
+	<div
+		class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/50 shadow-lg"
+	>
 		<div class="animate-pulse">
-			<div class="h-4 bg-purple-200 rounded w-3/4 mb-2"></div>
-			<div class="h-6 bg-purple-300 rounded w-1/2"></div>
+			<div class="h-4 bg-purple-200 dark:bg-purple-700 rounded w-3/4 mb-2"></div>
+			<div class="h-6 bg-purple-300 dark:bg-purple-600 rounded w-1/2"></div>
 		</div>
 	</div>
 {:else if gamificationData}
 	<div
-		class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100 shadow-lg"
+		class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/50 shadow-lg hover:shadow-xl transition-all duration-300"
 	>
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-semibold text-gray-800">🎮 Your Progress</h3>
+			<h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">🎮 Your Progress</h3>
 			<button
 				on:click={() => (showBadges = !showBadges)}
-				class="text-sm bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-full transition-colors"
+				class="text-sm bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-3 py-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800"
 			>
 				{showBadges ? 'Hide' : 'Show'} Badges
 			</button>
