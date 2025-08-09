@@ -147,6 +147,9 @@
 			<button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors">
 				<a href="/allocations" class="text-white no-underline">Manage Allocations</a>
 			</button>
+			<button class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors">
+				<a href="/transfers" class="text-white no-underline">Transfer Between Funds</a>
+			</button>
 			<button 
 				on:click={handleStartNewMonth}
 				class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
@@ -174,7 +177,9 @@
 		{:else}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each funds as fund}
-					<div class="bg-white rounded-lg shadow-md p-6 border-l-4" style="border-left-color: {fund.color}">
+					<div class="bg-white rounded-lg shadow-md p-6 border-l-4 hover:shadow-lg transition-shadow cursor-pointer" 
+					     style="border-left-color: {fund.color}"
+					     on:click={() => window.location.href = `/funds/${fund.id}`}>
 						<div class="flex items-start justify-between mb-2">
 							<h3 class="font-semibold text-gray-800">{fund.name}</h3>
 							<span class="text-2xl">{fund.icon}</span>
@@ -195,6 +200,7 @@
 							</div>
 						{/if}
 						<p class="text-sm text-gray-600">{fund.description}</p>
+						<div class="mt-2 text-xs text-gray-400">Click for details</div>
 					</div>
 				{/each}
 			</div>
