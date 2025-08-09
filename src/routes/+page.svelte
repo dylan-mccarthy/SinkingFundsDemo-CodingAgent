@@ -38,6 +38,40 @@
 		window.location.href = '/transactions/create';
 	};
 	
+	const handleStartNewMonth = async () => {
+		const depositAmount = prompt('Enter monthly deposit amount (optional):');
+		let depositCents = 0;
+		
+		if (depositAmount && parseFloat(depositAmount) > 0) {
+			depositCents = Math.round(parseFloat(depositAmount) * 100);
+		}
+		
+		const autoAllocate = depositCents > 0 && confirm('Automatically allocate this deposit according to your allocation rules?');
+		
+		try {
+			const response = await fetch('/api/periods/start', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					depositCents,
+					autoAllocate
+				})
+			});
+			
+			const result = await response.json();
+			
+			if (response.ok) {
+				alert(result.message);
+				window.location.reload(); // Refresh to show updated data
+			} else {
+				alert(`Failed to start new month: ${result.error}`);
+			}
+		} catch (error) {
+			console.error('Error starting new month:', error);
+			alert('Failed to start new month');
+		}
+	};
+	
 	const getFundById = (fundId: string) => {
 		return funds.find(f => f.id === fundId);
 	};
@@ -111,9 +145,11 @@
 				Add Transaction
 			</button>
 			<button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors">
-				Transfer Between Funds
+				<a href="/allocations" class="text-white no-underline">Manage Allocations</a>
 			</button>
-			<button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
+			<button 
+				on:click={handleStartNewMonth}
+				class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
 				Start New Month
 			</button>
 		</div>
