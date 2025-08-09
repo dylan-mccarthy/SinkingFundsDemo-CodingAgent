@@ -19,26 +19,24 @@ globalThis.sinkingPeriods = globalThis.sinkingPeriods || [...initialPeriods];
 
 export const GET: RequestHandler = async ({ url }) => {
 	let periods = globalThis.sinkingPeriods;
-	
+
 	// Filter by status if provided
 	const status = url.searchParams.get('status');
 	if (status) {
-		periods = periods.filter(p => p.status === status);
+		periods = periods.filter((p) => p.status === status);
 	}
-	
+
 	// Get current period (open period for current month/year)
 	const current = url.searchParams.get('current');
 	if (current === 'true') {
 		const now = new Date();
 		const currentYear = now.getFullYear();
 		const currentMonth = now.getMonth() + 1;
-		
-		let currentPeriod = periods.find(p => 
-			p.year === currentYear && 
-			p.month === currentMonth && 
-			p.status === 'OPEN'
+
+		let currentPeriod = periods.find(
+			(p) => p.year === currentYear && p.month === currentMonth && p.status === 'OPEN'
 		);
-		
+
 		// If no current period exists, create one
 		if (!currentPeriod) {
 			currentPeriod = {
@@ -52,22 +50,22 @@ export const GET: RequestHandler = async ({ url }) => {
 			};
 			globalThis.sinkingPeriods.push(currentPeriod);
 		}
-		
+
 		return json({ period: currentPeriod });
 	}
-	
+
 	// Sort by year and month descending (newest first)
 	periods.sort((a, b) => {
 		if (a.year !== b.year) return b.year - a.year;
 		return b.month - a.month;
 	});
-	
+
 	return json({ periods });
 };
 
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.json();
-	
+
 	const newPeriod = {
 		id: Math.random().toString(36).substr(2, 9),
 		userId: 'user1',
@@ -79,6 +77,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	};
 
 	globalThis.sinkingPeriods.push(newPeriod);
-	
+
 	return json({ period: newPeriod }, { status: 201 });
 };

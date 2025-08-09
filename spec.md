@@ -12,14 +12,14 @@ To encourage consistent use, the UI incorporates **gamification elements** such 
 
 ### Key Features
 
-* Define multiple sinking funds with names, colors, icons, and optional targets.
-* Set a global monthly deposit amount.
-* Allocate deposits to funds by fixed amounts, percentages, or priority rules.
-* Track transactions (expenses, incomes, transfers) against funds.
-* Rollover remaining balances each month to reward underspending.
-* Transfer between funds for flexibility.
-* Lock/unlock monthly periods to prevent accidental changes.
-* **Gamification:** badges for hitting savings milestones, streak counters for regular use, and level-up indicators for funds as they grow.
+- Define multiple sinking funds with names, colors, icons, and optional targets.
+- Set a global monthly deposit amount.
+- Allocate deposits to funds by fixed amounts, percentages, or priority rules.
+- Track transactions (expenses, incomes, transfers) against funds.
+- Rollover remaining balances each month to reward underspending.
+- Transfer between funds for flexibility.
+- Lock/unlock monthly periods to prevent accidental changes.
+- **Gamification:** badges for hitting savings milestones, streak counters for regular use, and level-up indicators for funds as they grow.
 
 ---
 
@@ -27,41 +27,41 @@ To encourage consistent use, the UI incorporates **gamification elements** such 
 
 **Funds**
 
-* CRUD operations, archive instead of delete when non-zero.
-* Optional target and minimum reserve values.
+- CRUD operations, archive instead of delete when non-zero.
+- Optional target and minimum reserve values.
 
 **Allocations**
 
-* Rules per fund: fixed, percent, or priority.
-* Allocation preview for upcoming month.
+- Rules per fund: fixed, percent, or priority.
+- Allocation preview for upcoming month.
 
 **Transactions**
 
-* Expense, Income, Transfer types.
-* Transfer is atomic double-entry.
-* Optional overspend prevention.
+- Expense, Income, Transfer types.
+- Transfer is atomic double-entry.
+- Optional overspend prevention.
 
 **Periods**
 
-* Start-of-month job: rollover + allocations.
-* End-of-month close and optional reopen with audit log.
+- Start-of-month job: rollover + allocations.
+- End-of-month close and optional reopen with audit log.
 
 **Reporting**
 
-* Dashboard showing total balance, fund list, top funds, and recent transactions.
-* Fund detail view with balance history to track spending patterns.
-* CSV export for offline analysis.
+- Dashboard showing total balance, fund list, top funds, and recent transactions.
+- Fund detail view with balance history to track spending patterns.
+- CSV export for offline analysis.
 
 **Settings**
 
-* Currency (AUD default), timezone (Australia/Melbourne), monthly deposit day, overspend prevention.
+- Currency (AUD default), timezone (Australia/Melbourne), monthly deposit day, overspend prevention.
 
 **Gamification Features**
 
-* **Savings Streaks:** consecutive months without overspending in a fund.
-* **Achievement Badges:** hitting percentage-of-target milestones or savings goals.
-* **Fund Level System:** funds “level up” as balances grow over time.
-* **Visual Celebrations:** confetti or animations when major goals are achieved.
+- **Savings Streaks:** consecutive months without overspending in a fund.
+- **Achievement Badges:** hitting percentage-of-target milestones or savings goals.
+- **Fund Level System:** funds “level up” as balances grow over time.
+- **Visual Celebrations:** confetti or animations when major goals are achieved.
 
 ---
 
@@ -96,7 +96,7 @@ model AuditLog { id String @id @default(cuid()); userId String; action String; c
 
 **Transfer**
 
-* Create paired in/out transactions with same `transferGroupId`.
+- Create paired in/out transactions with same `transferGroupId`.
 
 **Balance**
 
@@ -108,12 +108,12 @@ Start + ALLOCATION + INCOME + TRANSFER_IN - EXPENSE - TRANSFER_OUT
 
 ## 5) API Endpoints
 
-* Auth: signup, login, logout.
-* Funds: list, create, edit, archive/delete.
-* Allocations: rules CRUD, preview.
-* Periods: start, close, reopen.
-* Transactions: list, add, transfer, edit, delete.
-* Backup: export/import JSON.
+- Auth: signup, login, logout.
+- Funds: list, create, edit, archive/delete.
+- Allocations: rules CRUD, preview.
+- Periods: start, close, reopen.
+- Transactions: list, add, transfer, edit, delete.
+- Backup: export/import JSON.
 
 ---
 
@@ -127,29 +127,29 @@ Start + ALLOCATION + INCOME + TRANSFER_IN - EXPENSE - TRANSFER_OUT
 **Transactions List:** filters, CSV export, inline edit.
 **Gamification UI:**
 
-* Badge display with hover tooltips showing criteria.
-* Progress bars for streaks.
-* Level meter for each fund.
+- Badge display with hover tooltips showing criteria.
+- Progress bars for streaks.
+- Level meter for each fund.
   **Styling:** rounded-2xl, soft shadows, accessible color contrast, celebratory animations.
 
 ---
 
 ## 7) Milestones
 
-* **M0:** Project setup.
-* **M1:** Funds & Transactions CRUD.
-* **M2:** Period start (rollover + allocations), Allocation Editor.
-* **M3:** Transfers, balances, fund detail.
-* **M4:** Close/reopen period, audit log, CSV export.
-* **M5:** UI polish, accessibility, gamification layer.
+- **M0:** Project setup.
+- **M1:** Funds & Transactions CRUD.
+- **M2:** Period start (rollover + allocations), Allocation Editor.
+- **M3:** Transfers, balances, fund detail.
+- **M4:** Close/reopen period, audit log, CSV export.
+- **M5:** UI polish, accessibility, gamification layer.
 
 ---
 
 ## 8) Acceptance Criteria
 
-* Funds and allocation rules can be defined.
-* Start Month runs rollover + allocations.
-* Expenses and transfers adjust balances correctly.
-* Periods can be closed/reopened with audit.
-* Dashboard provides visibility of spending patterns and cumulative growth.
-* Gamification features (streaks, badges, levels) update in real-time as criteria are met.
+- Funds and allocation rules can be defined.
+- Start Month runs rollover + allocations.
+- Expenses and transfers adjust balances correctly.
+- Periods can be closed/reopened with audit.
+- Dashboard provides visibility of spending patterns and cumulative growth.
+- Gamification features (streaks, badges, levels) update in real-time as criteria are met.

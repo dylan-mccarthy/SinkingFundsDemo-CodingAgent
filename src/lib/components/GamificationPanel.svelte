@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fly, scale } from 'svelte/transition';
-	
+
 	let gamificationData: any = null;
 	let loading = true;
 	let showBadges = false;
 	let celebrationVisible = false;
-	
+
 	export let showCelebration = false;
-	
+
 	onMount(async () => {
 		await loadGamificationData();
-		
+
 		// Show celebration if requested
 		if (showCelebration) {
 			setTimeout(() => {
@@ -22,7 +22,7 @@
 			}, 500);
 		}
 	});
-	
+
 	const loadGamificationData = async () => {
 		try {
 			const response = await fetch('/api/gamification');
@@ -35,7 +35,7 @@
 			loading = false;
 		}
 	};
-	
+
 	const getLevelBadge = (level: number) => {
 		if (level === 0) return '🐣';
 		if (level <= 2) return '🌱';
@@ -44,7 +44,7 @@
 		if (level <= 8) return '🏆';
 		return '👑';
 	};
-	
+
 	const getLevelTitle = (level: number) => {
 		if (level === 0) return 'Getting Started';
 		if (level <= 2) return 'Saver';
@@ -57,35 +57,41 @@
 
 <!-- Celebration Animation -->
 {#if celebrationVisible}
-	<div class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center"
-	     transition:scale={{ duration: 500 }}>
-		<div class="bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-white px-8 py-4 rounded-full text-2xl font-bold shadow-2xl">
+	<div
+		class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center"
+		transition:scale={{ duration: 500 }}
+	>
+		<div
+			class="bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-white px-8 py-4 rounded-full text-2xl font-bold shadow-2xl"
+		>
 			🎉 Goal Achieved! 🎉
 		</div>
 	</div>
 {/if}
 
 {#if loading}
-	<div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100">
+	<div
+		class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/50 shadow-lg"
+	>
 		<div class="animate-pulse">
-			<div class="h-4 bg-purple-200 rounded w-3/4 mb-2"></div>
-			<div class="h-6 bg-purple-300 rounded w-1/2"></div>
+			<div class="h-4 bg-purple-200 dark:bg-purple-700 rounded w-3/4 mb-2"></div>
+			<div class="h-6 bg-purple-300 dark:bg-purple-600 rounded w-1/2"></div>
 		</div>
 	</div>
 {:else if gamificationData}
-	<div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100 shadow-lg">
+	<div
+		class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/50 shadow-lg hover:shadow-xl transition-all duration-300"
+	>
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-semibold text-gray-800">
-				🎮 Your Progress
-			</h3>
-			<button 
-				on:click={() => showBadges = !showBadges}
-				class="text-sm bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-full transition-colors"
+			<h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">🎮 Your Progress</h3>
+			<button
+				on:click={() => (showBadges = !showBadges)}
+				class="text-sm bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-3 py-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800"
 			>
 				{showBadges ? 'Hide' : 'Show'} Badges
 			</button>
 		</div>
-		
+
 		<!-- Overall Level -->
 		<div class="mb-4" transition:fly={{ y: 20, duration: 300 }}>
 			<div class="flex items-center justify-between mb-2">
@@ -93,7 +99,8 @@
 					<span class="text-2xl">{getLevelBadge(gamificationData.overall.level)}</span>
 					<div>
 						<div class="font-semibold text-gray-800">
-							Level {gamificationData.overall.level} {getLevelTitle(gamificationData.overall.level)}
+							Level {gamificationData.overall.level}
+							{getLevelTitle(gamificationData.overall.level)}
 						</div>
 						<div class="text-sm text-gray-600">
 							Total: ${(gamificationData.overall.totalBalance / 100).toFixed(2)}
@@ -107,10 +114,10 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Level Progress Bar -->
 			<div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-				<div 
+				<div
 					class="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
 					style="width: {gamificationData.overall.levelProgress}%"
 				></div>
@@ -119,11 +126,13 @@
 				{gamificationData.overall.levelProgress.toFixed(1)}% to next level
 			</div>
 		</div>
-		
+
 		<!-- Stats Row -->
 		<div class="grid grid-cols-3 gap-4 mb-4" transition:fly={{ y: 20, duration: 300, delay: 100 }}>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-purple-600">{gamificationData.overall.currentStreak}</div>
+				<div class="text-2xl font-bold text-purple-600">
+					{gamificationData.overall.currentStreak}
+				</div>
 				<div class="text-xs text-gray-600">Month Streak</div>
 			</div>
 			<div class="text-center">
@@ -131,11 +140,13 @@
 				<div class="text-xs text-gray-600">Badges Earned</div>
 			</div>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-green-600">{gamificationData.overall.goalsReached}/{gamificationData.overall.totalGoals}</div>
+				<div class="text-2xl font-bold text-green-600">
+					{gamificationData.overall.goalsReached}/{gamificationData.overall.totalGoals}
+				</div>
 				<div class="text-xs text-gray-600">Goals Reached</div>
 			</div>
 		</div>
-		
+
 		<!-- Badges -->
 		{#if showBadges}
 			<div class="mt-4 border-t border-purple-200 pt-4" transition:fly={{ y: 20, duration: 300 }}>
@@ -147,7 +158,7 @@
 				{:else}
 					<div class="grid grid-cols-2 gap-2">
 						{#each gamificationData.badges as badge, index}
-							<div 
+							<div
 								class="bg-white rounded-lg p-3 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
 								transition:scale={{ delay: index * 100, duration: 300 }}
 							>
@@ -164,10 +175,13 @@
 				{/if}
 			</div>
 		{/if}
-		
+
 		<!-- Fund Level Indicators (Mini) -->
 		{#if gamificationData.funds.length > 0}
-			<div class="mt-4 border-t border-purple-200 pt-4" transition:fly={{ y: 20, duration: 300, delay: 200 }}>
+			<div
+				class="mt-4 border-t border-purple-200 pt-4"
+				transition:fly={{ y: 20, duration: 300, delay: 200 }}
+			>
 				<h4 class="text-sm font-semibold text-gray-700 mb-2">Fund Levels</h4>
 				<div class="space-y-2">
 					{#each gamificationData.funds as fundData}

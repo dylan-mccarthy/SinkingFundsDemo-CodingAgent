@@ -13,7 +13,7 @@ const initialFunds = [
 		balance: 250000 // $2,500
 	},
 	{
-		id: '2', 
+		id: '2',
 		name: 'Vacation',
 		description: 'Saving for our next vacation',
 		color: '#06b6d4',
@@ -32,7 +32,7 @@ export const GET: RequestHandler = async () => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.json();
-	
+
 	const newFund = {
 		id: Math.random().toString(36).substr(2, 9),
 		name: data.name,
@@ -46,6 +46,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	};
 
 	globalThis.sinkingFunds.push(newFund);
-	
+
 	return json({ fund: newFund }, { status: 201 });
 };
