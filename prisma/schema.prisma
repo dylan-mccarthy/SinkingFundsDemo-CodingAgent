@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./sinkingfunds.db"
+}
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+  TRANSFER_OUT
+  TRANSFER_IN
+  ALLOCATION
+}
+
+enum PeriodStatus {
+  OPEN
+  CLOSED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  funds          Fund[]
+  periods        Period[]
+  allocationRuns AllocationRun[]
+  allocationRules AllocationRule[]
+  transactions   Transaction[]
+  auditLogs      AuditLog[]
+}
+
+model Fund {
+  id               String  @id @default(cuid())
+  userId           String
+  name             String
+  description      String?
+  color            String?
+  icon             String?
+  active           Boolean @default(true)
+  targetCents      Int?
+  minReserveCents  Int?
+  displayOrder     Int     @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocationRules AllocationRule[]
+  allocationLines AllocationLine[]
+  transactions    Transaction[]
+}
+
+model Period {
+  id        String       @id @default(cuid())
+  userId    String
+  year      Int
+  month     Int
+  status    PeriodStatus @default(OPEN)
+  startedAt DateTime
+  closedAt  DateTime?
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocationRuns AllocationRun[]
+  transactions   Transaction[]
+
+  @@unique([userId, year, month])
+}
+
+model AllocationRule {
+  id         String  @id @default(cuid())
+  userId     String
+  fundId     String
+  mode       String  // "fixed", "percent", "priority"
+  percentBp  Int?    // basis points (1/100th of a percent)
+  fixedCents Int?
+  priority   Int     @default(0)
+  active     Boolean @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fund Fund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+}
+
+model AllocationRun {
+  id           String   @id @default(cuid())
+  userId       String
+  periodId     String
+  depositCents Int
+  executedAt   DateTime @default(now())
+  hash         String
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period          Period           @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  allocationLines AllocationLine[]
+}
+
+model AllocationLine {
+  id              String @id @default(cuid())
+  allocationRunId String
+  fundId          String
+  amountCents     Int
+
+  allocationRun AllocationRun @relation(fields: [allocationRunId], references: [id], onDelete: Cascade)
+  fund          Fund          @relation(fields: [fundId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  userId          String
+  periodId        String?
+  fundId          String?
+  type            TransactionType
+  amountCents     Int
+  date            DateTime
+  payee           String?
+  note            String?
+  tags            String[]
+  transferGroupId String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period Period? @relation(fields: [periodId], references: [id], onDelete: SetNull)
+  fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: SetNull)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  context   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
