@@ -427,20 +427,5 @@
 				</table>
 			</div>
 		{/if}
-									<div class="flex items-center space-x-1">
-										<span>{formatTransactionAmount(transaction)}</span>
-										{#if transaction.type === 'TRANSFER_IN' || transaction.type === 'ALLOCATION'}
-											<span class="text-green-500">↗️</span>
-										{:else if transaction.type === 'TRANSFER_OUT' || transaction.type === 'EXPENSE'}
-											<span class="text-red-500">↘️</span>
-										{/if}
-									</div>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		{/if}
 	</div>
 </div>
