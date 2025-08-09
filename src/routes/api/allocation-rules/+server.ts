@@ -34,28 +34,28 @@ globalThis.sinkingAllocationRules = globalThis.sinkingAllocationRules || [...ini
 
 export const GET: RequestHandler = async ({ url }) => {
 	let rules = globalThis.sinkingAllocationRules;
-	
+
 	// Filter by fund if fundId parameter is provided
 	const fundId = url.searchParams.get('fundId');
 	if (fundId) {
-		rules = rules.filter(r => r.fundId === fundId);
+		rules = rules.filter((r) => r.fundId === fundId);
 	}
-	
+
 	// Filter by active status
 	const activeOnly = url.searchParams.get('active');
 	if (activeOnly === 'true') {
-		rules = rules.filter(r => r.active);
+		rules = rules.filter((r) => r.active);
 	}
-	
+
 	// Sort by priority ascending (higher priority first)
 	rules.sort((a, b) => a.priority - b.priority);
-	
+
 	return json({ rules });
 };
 
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.json();
-	
+
 	const newRule = {
 		id: Math.random().toString(36).substr(2, 9),
 		userId: 'user1',
@@ -73,37 +73,37 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (newRule.mode === 'percent' && !newRule.percentBp) {
 		return json({ error: 'percentBp is required for percent mode' }, { status: 400 });
 	}
-	
+
 	if (newRule.mode === 'fixed' && !newRule.fixedCents) {
 		return json({ error: 'fixedCents is required for fixed mode' }, { status: 400 });
 	}
 
 	globalThis.sinkingAllocationRules.push(newRule);
-	
+
 	return json({ rule: newRule }, { status: 201 });
 };
 
 export const PUT: RequestHandler = async ({ request }) => {
 	const data = await request.json();
 	const ruleId = data.id;
-	
+
 	if (!ruleId) {
 		return json({ error: 'Rule ID is required' }, { status: 400 });
 	}
-	
-	const ruleIndex = globalThis.sinkingAllocationRules.findIndex(r => r.id === ruleId);
+
+	const ruleIndex = globalThis.sinkingAllocationRules.findIndex((r) => r.id === ruleId);
 	if (ruleIndex === -1) {
 		return json({ error: 'Rule not found' }, { status: 404 });
 	}
-	
+
 	// Update the rule
 	const updatedRule = {
 		...globalThis.sinkingAllocationRules[ruleIndex],
 		...data,
 		updatedAt: new Date().toISOString()
 	};
-	
+
 	globalThis.sinkingAllocationRules[ruleIndex] = updatedRule;
-	
+
 	return json({ rule: updatedRule });
 };

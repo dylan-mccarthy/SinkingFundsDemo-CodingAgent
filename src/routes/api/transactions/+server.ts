@@ -16,7 +16,7 @@ const initialTransactions = [
 	{
 		id: '2',
 		fundId: '2',
-		type: 'ALLOCATION', 
+		type: 'ALLOCATION',
 		amountCents: 50000, // $500
 		date: '2024-01-01T00:00:00Z',
 		payee: 'Monthly Allocation',
@@ -30,22 +30,22 @@ globalThis.sinkingTransactions = globalThis.sinkingTransactions || [...initialTr
 
 export const GET: RequestHandler = async ({ url }) => {
 	let transactions = globalThis.sinkingTransactions;
-	
+
 	// Filter by fund if fundId parameter is provided
 	const fundId = url.searchParams.get('fundId');
 	if (fundId) {
-		transactions = transactions.filter(t => t.fundId === fundId);
+		transactions = transactions.filter((t) => t.fundId === fundId);
 	}
-	
+
 	// Sort by date descending (newest first)
 	transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-	
+
 	return json({ transactions });
 };
 
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.json();
-	
+
 	const newTransaction = {
 		id: Math.random().toString(36).substr(2, 9),
 		fundId: data.fundId,
@@ -60,10 +60,10 @@ export const POST: RequestHandler = async ({ request }) => {
 	};
 
 	globalThis.sinkingTransactions.push(newTransaction);
-	
+
 	// Update fund balance
 	if (globalThis.sinkingFunds) {
-		const fund = globalThis.sinkingFunds.find(f => f.id === data.fundId);
+		const fund = globalThis.sinkingFunds.find((f) => f.id === data.fundId);
 		if (fund) {
 			switch (data.type) {
 				case 'EXPENSE':
@@ -82,6 +82,6 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		}
 	}
-	
+
 	return json({ transaction: newTransaction }, { status: 201 });
 };

@@ -24,27 +24,27 @@ const getFundById = (id: string) => {
 			balance: 125000
 		}
 	];
-	return funds.find(f => f.id === id);
+	return funds.find((f) => f.id === id);
 };
 
 export const GET: RequestHandler = async ({ params }) => {
 	const fund = getFundById(params.id);
-	
+
 	if (!fund) {
 		return json({ error: 'Fund not found' }, { status: 404 });
 	}
-	
+
 	return json({ fund });
 };
 
 export const PUT: RequestHandler = async ({ params, request }) => {
 	const data = await request.json();
 	const fund = getFundById(params.id);
-	
+
 	if (!fund) {
 		return json({ error: 'Fund not found' }, { status: 404 });
 	}
-	
+
 	// Update fund properties
 	Object.assign(fund, {
 		name: data.name || fund.name,
@@ -53,17 +53,17 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 		icon: data.icon || fund.icon,
 		targetCents: data.targetCents ?? fund.targetCents
 	});
-	
+
 	return json({ fund });
 };
 
 export const DELETE: RequestHandler = async ({ params }) => {
 	const fund = getFundById(params.id);
-	
+
 	if (!fund) {
 		return json({ error: 'Fund not found' }, { status: 404 });
 	}
-	
+
 	// In real app, we would archive instead of delete if balance > 0
 	return json({ success: true });
 };

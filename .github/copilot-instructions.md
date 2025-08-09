@@ -3,6 +3,7 @@
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
 ## Project Status & Overview
+
 This repository contains a gamified SvelteKit application for managing sinking funds (personal finance tracking). The project is currently in the **specification phase** - implementation has not yet begun. The complete product specification is located in `spec.md`.
 
 **Stack:** SvelteKit • Skeleton UI • Prisma ORM • SQLite • TypeScript • Tailwind CSS
@@ -10,6 +11,7 @@ This repository contains a gamified SvelteKit application for managing sinking f
 ## Working Effectively
 
 ### Initial Project Setup (Not Yet Implemented)
+
 When the project implementation begins, follow these exact commands:
 
 ```bash
@@ -33,6 +35,7 @@ npm install -D @types/node
 ```
 
 ### Database Setup with Prisma
+
 ```bash
 # Initialize Prisma - creates prisma/ directory and schema
 npx prisma init --datasource-provider sqlite
@@ -49,6 +52,7 @@ npx prisma db seed  # takes 5-10 seconds
 ```
 
 ### Build and Development Commands
+
 ```bash
 # Development server - NEVER CANCEL: runs continuously
 npm run dev  # timeout: unlimited, runs on http://localhost:5173
@@ -63,11 +67,12 @@ npm run preview  # runs on http://localhost:4173
 npm run check  # takes 10-30 seconds
 
 # Linting and formatting - ALWAYS run before committing
-npm run lint     # takes 5-15 seconds  
+npm run lint     # takes 5-15 seconds
 npm run format   # takes 5-10 seconds
 ```
 
 ### Testing Commands
+
 ```bash
 # Unit tests with Vitest - NEVER CANCEL: takes 30-120 seconds
 npm run test      # timeout: 180 seconds
@@ -78,6 +83,7 @@ npm run test:e2e  # timeout: 600 seconds
 ```
 
 ### Database Operations
+
 ```bash
 # View database in browser
 npx prisma studio  # opens on http://localhost:5555
@@ -94,6 +100,7 @@ npx prisma db push  # takes 5-15 seconds
 **CRITICAL**: After making any changes, ALWAYS run through these validation steps:
 
 ### Manual Testing Scenarios
+
 1. **Fund Management Flow:**
    - Create a new fund with name, target amount, and color
    - Edit fund details
@@ -121,10 +128,11 @@ npx prisma db push  # takes 5-15 seconds
    - Test dark/light theme switching (if implemented)
 
 ### Pre-commit Validation
+
 ```bash
 # ALWAYS run these before committing changes:
 npm run lint
-npm run format  
+npm run format
 npm run check
 npm run test
 # For UI changes, also run:
@@ -134,12 +142,13 @@ npm run test:e2e
 ## Key Files & Directories
 
 ### Project Structure (When Implemented)
+
 ```
 sinking-funds-app/
 ├── src/
 │   ├── routes/          # SvelteKit pages and API routes
 │   ├── lib/             # Shared components and utilities
-│   ├── app.html         # Main HTML template  
+│   ├── app.html         # Main HTML template
 │   └── hooks.server.ts  # Server-side hooks
 ├── prisma/
 │   ├── schema.prisma    # Database schema (copy from spec.md)
@@ -150,6 +159,7 @@ sinking-funds-app/
 ```
 
 ### Critical Files to Review
+
 - **`spec.md`** - Complete product specification with data models and requirements
 - **`prisma/schema.prisma`** - Database schema definition
 - **`src/routes/+layout.svelte`** - Main layout with navigation
@@ -159,17 +169,20 @@ sinking-funds-app/
 ## Development Guidelines
 
 ### Database Schema Validation
+
 - ALWAYS verify Prisma schema matches the specification in `spec.md`
 - Run `npx prisma validate` before migrations
 - Test database operations in Prisma Studio before implementing in code
 
 ### Component Development
+
 - Follow Skeleton UI component patterns
 - Use Tailwind CSS for styling with `rounded-2xl`, soft shadows
 - Implement accessibility features (ARIA labels, keyboard navigation)
 - Add gamification animations using Svelte transitions
 
-### API Route Development  
+### API Route Development
+
 - Place API endpoints in `src/routes/api/`
 - Use proper HTTP status codes and error handling
 - Validate all inputs before database operations
@@ -178,16 +191,19 @@ sinking-funds-app/
 ## Common Issues & Solutions
 
 ### Build Failures
+
 - **Prisma generate fails**: Run `npm install @prisma/client` first
 - **TypeScript errors**: Run `npm run check` to identify issues
 - **Missing dependencies**: Check `package.json` matches requirements
 
-### Database Issues  
+### Database Issues
+
 - **Schema sync errors**: Run `npx prisma db push` to sync
 - **Migration conflicts**: Reset with `npx prisma migrate reset` (destroys data)
 - **Connection errors**: Verify SQLite file permissions and path
 
 ### Development Server Issues
+
 - **Port conflicts**: Change port with `npm run dev -- --port 5174`
 - **Hot reload not working**: Restart dev server
 - **Build performance**: Use `npm run dev -- --host` for network access
@@ -195,12 +211,14 @@ sinking-funds-app/
 ## Timeout Specifications
 
 **CRITICAL - NEVER CANCEL these commands:**
+
 - `npm install`: 180 seconds (3 minutes)
-- `npm run build`: 600 seconds (10 minutes) 
+- `npm run build`: 600 seconds (10 minutes)
 - `npm run test:e2e`: 600 seconds (10 minutes)
 - `npm run dev`: Unlimited (continuous process)
 
 **Standard timeouts:**
+
 - `npm run test`: 180 seconds (3 minutes)
 - `npm run lint`: 60 seconds (1 minute)
 - `npx prisma generate`: 60 seconds (1 minute)
@@ -214,7 +232,7 @@ ls -la  # (when project exists)
 .
 ..
 .env
-.env.example  
+.env.example
 .gitignore
 README.md
 package.json
@@ -229,7 +247,7 @@ vite.config.ts
 # package.json scripts (typical)
 "scripts": {
   "dev": "vite dev",
-  "build": "vite build", 
+  "build": "vite build",
   "preview": "vite preview",
   "test": "vitest",
   "test:e2e": "playwright test",
@@ -240,4 +258,5 @@ vite.config.ts
 ```
 
 ## Current State Note
+
 **IMPORTANT**: This repository currently contains only the specification (`spec.md`). No implementation files exist yet. When beginning development, follow the "Initial Project Setup" section above to bootstrap the SvelteKit application with the required dependencies.

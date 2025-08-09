@@ -2,25 +2,25 @@
 	// Dashboard page for Sinking Funds Manager
 	import { onMount } from 'svelte';
 	import GamificationPanel from '$lib/components/GamificationPanel.svelte';
-	
+
 	let funds: any[] = [];
 	let totalBalance = 0;
 	let recentTransactions: any[] = [];
 	let loading = true;
 	let showCelebration = false;
-	
+
 	onMount(async () => {
 		try {
 			// Load funds from API
 			const fundsResponse = await fetch('/api/funds');
 			const fundsData = await fundsResponse.json();
 			funds = fundsData.funds || [];
-			
+
 			// Load recent transactions
 			const transactionsResponse = await fetch('/api/transactions');
 			const transactionsData = await transactionsResponse.json();
 			recentTransactions = (transactionsData.transactions || []).slice(0, 5); // Show only 5 most recent
-			
+
 			// Calculate total balance
 			totalBalance = funds.reduce((sum, fund) => sum + fund.balance, 0);
 		} catch (error) {
@@ -29,27 +29,29 @@
 			loading = false;
 		}
 	});
-	
+
 	const handleCreateFund = () => {
 		// Navigate to fund creation page
 		window.location.href = '/funds/create';
 	};
-	
+
 	const handleAddTransaction = () => {
 		// Navigate to transaction creation page
 		window.location.href = '/transactions/create';
 	};
-	
+
 	const handleStartNewMonth = async () => {
 		const depositAmount = prompt('Enter monthly deposit amount (optional):');
 		let depositCents = 0;
-		
+
 		if (depositAmount && parseFloat(depositAmount) > 0) {
 			depositCents = Math.round(parseFloat(depositAmount) * 100);
 		}
-		
-		const autoAllocate = depositCents > 0 && confirm('Automatically allocate this deposit according to your allocation rules?');
-		
+
+		const autoAllocate =
+			depositCents > 0 &&
+			confirm('Automatically allocate this deposit according to your allocation rules?');
+
 		try {
 			const response = await fetch('/api/periods/start', {
 				method: 'POST',
@@ -59,9 +61,9 @@
 					autoAllocate
 				})
 			});
-			
+
 			const result = await response.json();
-			
+
 			if (response.ok) {
 				alert(result.message);
 				window.location.reload(); // Refresh to show updated data
@@ -73,11 +75,11 @@
 			alert('Failed to start new month');
 		}
 	};
-	
+
 	const getFundById = (fundId: string) => {
-		return funds.find(f => f.id === fundId);
+		return funds.find((f) => f.id === fundId);
 	};
-	
+
 	const formatTransactionAmount = (transaction: any) => {
 		const amount = (transaction.amountCents / 100).toFixed(2);
 		switch (transaction.type) {
@@ -90,7 +92,7 @@
 				return `$${amount}`;
 		}
 	};
-	
+
 	const getTransactionTypeColor = (type: string) => {
 		switch (type) {
 			case 'EXPENSE':
@@ -111,7 +113,9 @@
 <div class="container mx-auto px-4 py-8">
 	<header class="mb-8">
 		<h1 class="text-3xl font-bold text-gray-900 mb-2">Sinking Funds Manager</h1>
-		<p class="text-gray-600">Track your spending and build your savings with smart fund allocation</p>
+		<p class="text-gray-600">
+			Track your spending and build your savings with smart fund allocation
+		</p>
 	</header>
 
 	<!-- Summary Cards -->
@@ -120,17 +124,17 @@
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">Total Balance</h3>
 			<p class="text-3xl font-bold text-green-600">${(totalBalance / 100).toFixed(2)}</p>
 		</div>
-		
+
 		<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">Active Funds</h3>
 			<p class="text-3xl font-bold text-blue-600">{funds.length}</p>
 		</div>
-		
+
 		<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">This Month</h3>
 			<p class="text-3xl font-bold text-purple-600">$0.00</p>
 		</div>
-		
+
 		<!-- Gamification Panel -->
 		<div class="md:col-span-1">
 			<GamificationPanel {showCelebration} />
@@ -141,37 +145,46 @@
 	<div class="mb-8">
 		<h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-			<button 
+			<button
 				on:click={handleCreateFund}
-				class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<div class="text-2xl mb-2">💰</div>
 				<div class="text-sm font-semibold">Add Fund</div>
 			</button>
-			<button 
+			<button
 				on:click={handleAddTransaction}
-				class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<div class="text-2xl mb-2">📝</div>
 				<div class="text-sm font-semibold">Add Transaction</div>
 			</button>
-			<button class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+			<button
+				class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<a href="/allocations" class="text-white no-underline">
 					<div class="text-2xl mb-2">⚖️</div>
 					<div class="text-sm font-semibold">Manage Allocations</div>
 				</a>
 			</button>
-			<button class="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+			<button
+				class="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<a href="/transfers" class="text-white no-underline">
 					<div class="text-2xl mb-2">🔄</div>
 					<div class="text-sm font-semibold">Transfer Funds</div>
 				</a>
 			</button>
-			<button 
+			<button
 				on:click={handleStartNewMonth}
-				class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<div class="text-2xl mb-2">📅</div>
 				<div class="text-sm font-semibold">Start New Month</div>
 			</button>
-			<button class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+			<button
+				class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+			>
 				<a href="/periods" class="text-white no-underline">
 					<div class="text-2xl mb-2">⏰</div>
 					<div class="text-sm font-semibold">Manage Periods</div>
@@ -190,18 +203,21 @@
 		{:else if funds.length === 0}
 			<div class="bg-gray-50 rounded-lg p-8 text-center">
 				<p class="text-gray-500 mb-4">No funds yet. Create your first fund to get started!</p>
-				<button 
+				<button
 					on:click={handleCreateFund}
-					class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md transition-colors">
+					class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md transition-colors"
+				>
 					Create Your First Fund
 				</button>
 			</div>
 		{:else}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{#each funds as fund}
-					<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1" 
-					     style="border-left-color: {fund.color}"
-					     on:click={() => window.location.href = `/funds/${fund.id}`}>
+					<div
+						class="bg-white rounded-2xl shadow-lg p-6 border-l-4 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+						style="border-left-color: {fund.color}"
+						on:click={() => (window.location.href = `/funds/${fund.id}`)}
+					>
 						<div class="flex items-start justify-between mb-4">
 							<div class="flex items-center space-x-3">
 								<span class="text-3xl">{fund.icon}</span>
@@ -215,9 +231,11 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="mb-4">
-							<p class="text-3xl font-bold text-green-600 mb-2">${(fund.balance / 100).toFixed(2)}</p>
+							<p class="text-3xl font-bold text-green-600 mb-2">
+								${(fund.balance / 100).toFixed(2)}
+							</p>
 							{#if fund.targetCents > 0}
 								<div class="mb-3">
 									<div class="flex justify-between text-sm text-gray-600 mb-2">
@@ -225,10 +243,10 @@
 										<span>${(fund.targetCents / 100).toFixed(2)}</span>
 									</div>
 									<div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-										<div 
-											class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out" 
-											style="width: {Math.min(100, (fund.balance / fund.targetCents) * 100)}%">
-										</div>
+										<div
+											class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
+											style="width: {Math.min(100, (fund.balance / fund.targetCents) * 100)}%"
+										></div>
 									</div>
 									<div class="text-xs text-gray-500 mt-1 text-right">
 										{Math.min(100, (fund.balance / fund.targetCents) * 100).toFixed(1)}%
@@ -237,7 +255,7 @@
 							{/if}
 							<p class="text-sm text-gray-600 leading-relaxed">{fund.description}</p>
 						</div>
-						
+
 						<!-- Fund Level Indicator -->
 						<div class="flex items-center justify-between pt-3 border-t border-gray-100">
 							<div class="flex items-center space-x-2">
@@ -268,9 +286,10 @@
 		{:else if recentTransactions.length === 0}
 			<div class="bg-gray-50 rounded-lg p-6 text-center">
 				<p class="text-gray-500 mb-4">No transactions yet.</p>
-				<button 
+				<button
 					on:click={handleAddTransaction}
-					class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+					class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors"
+				>
 					Add Your First Transaction
 				</button>
 			</div>
@@ -279,16 +298,31 @@
 				<table class="w-full">
 					<thead class="bg-gradient-to-r from-gray-50 to-gray-100">
 						<tr>
-							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fund</th>
-							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
-							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+							<th
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								>Date</th
+							>
+							<th
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								>Fund</th
+							>
+							<th
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								>Description</th
+							>
+							<th
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								>Amount</th
+							>
 						</tr>
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-100">
 						{#each recentTransactions as transaction, index}
 							{@const fund = getFundById(transaction.fundId)}
-							<tr class="hover:bg-gray-50 transition-colors duration-200" style="animation-delay: {index * 100}ms;">
+							<tr
+								class="hover:bg-gray-50 transition-colors duration-200"
+								style="animation-delay: {index * 100}ms;"
+							>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
 									{new Date(transaction.date).toLocaleDateString()}
 								</td>
@@ -307,14 +341,20 @@
 										{#if transaction.payee}
 											<span class="font-medium text-gray-900">{transaction.payee}</span>
 										{:else}
-											<span class="text-gray-500 capitalize">{transaction.type.toLowerCase().replace('_', ' ')}</span>
+											<span class="text-gray-500 capitalize"
+												>{transaction.type.toLowerCase().replace('_', ' ')}</span
+											>
 										{/if}
 									</div>
 									{#if transaction.note}
 										<div class="text-gray-500 text-xs mt-1 leading-relaxed">{transaction.note}</div>
 									{/if}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-bold {getTransactionTypeColor(transaction.type)}">
+								<td
+									class="px-6 py-4 whitespace-nowrap text-sm font-bold {getTransactionTypeColor(
+										transaction.type
+									)}"
+								>
 									<div class="flex items-center space-x-1">
 										<span>{formatTransactionAmount(transaction)}</span>
 										{#if transaction.type === 'TRANSFER_IN' || transaction.type === 'ALLOCATION'}

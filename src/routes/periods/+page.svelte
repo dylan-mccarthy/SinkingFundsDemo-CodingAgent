@@ -1,29 +1,29 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	
+
 	let periods: any[] = [];
 	let auditLogs: any[] = [];
 	let loading = true;
 	let selectedPeriod: any = null;
 	let actionReason = '';
 	let showAuditLogs = false;
-	
+
 	onMount(async () => {
 		await loadData();
 	});
-	
+
 	const loadData = async () => {
 		try {
 			const [periodsResponse, auditResponse] = await Promise.all([
 				fetch('/api/periods'),
 				fetch('/api/audit-logs?limit=20')
 			]);
-			
+
 			if (periodsResponse.ok) {
 				const periodsData = await periodsResponse.json();
 				periods = periodsData.periods || [];
 			}
-			
+
 			if (auditResponse.ok) {
 				const auditData = await auditResponse.json();
 				auditLogs = auditData.logs || [];
@@ -34,14 +34,18 @@
 			loading = false;
 		}
 	};
-	
+
 	const closePeriod = async (period: any) => {
-		if (!confirm(`Close period ${period.year}-${period.month.toString().padStart(2, '0')}? This will prevent further changes to this period.`)) {
+		if (
+			!confirm(
+				`Close period ${period.year}-${period.month.toString().padStart(2, '0')}? This will prevent further changes to this period.`
+			)
+		) {
 			return;
 		}
-		
+
 		const reason = prompt('Reason for closing (optional):') || 'Manual closure';
-		
+
 		try {
 			const response = await fetch('/api/periods/close', {
 				method: 'POST',
@@ -51,9 +55,9 @@
 					reason
 				})
 			});
-			
+
 			const result = await response.json();
-			
+
 			if (response.ok) {
 				alert(result.message);
 				await loadData(); // Refresh data
@@ -65,14 +69,18 @@
 			alert('Failed to close period');
 		}
 	};
-	
+
 	const reopenPeriod = async (period: any) => {
-		if (!confirm(`Reopen period ${period.year}-${period.month.toString().padStart(2, '0')}? This will allow changes to this period again.`)) {
+		if (
+			!confirm(
+				`Reopen period ${period.year}-${period.month.toString().padStart(2, '0')}? This will allow changes to this period again.`
+			)
+		) {
 			return;
 		}
-		
+
 		const reason = prompt('Reason for reopening (optional):') || 'Manual reopening';
-		
+
 		try {
 			const response = await fetch('/api/periods/reopen', {
 				method: 'POST',
@@ -82,9 +90,9 @@
 					reason
 				})
 			});
-			
+
 			const result = await response.json();
-			
+
 			if (response.ok) {
 				alert(result.message);
 				await loadData(); // Refresh data
@@ -96,7 +104,7 @@
 			alert('Failed to reopen period');
 		}
 	};
-	
+
 	const downloadTransactionsCSV = () => {
 		const url = '/api/export?type=transactions';
 		const link = document.createElement('a');
@@ -106,7 +114,7 @@
 		link.click();
 		document.body.removeChild(link);
 	};
-	
+
 	const downloadFundsCSV = () => {
 		const url = '/api/export?type=funds';
 		const link = document.createElement('a');
@@ -116,17 +124,15 @@
 		link.click();
 		document.body.removeChild(link);
 	};
-	
+
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleString();
 	};
-	
+
 	const getStatusBadge = (status: string) => {
-		return status === 'OPEN' 
-			? 'bg-green-100 text-green-800' 
-			: 'bg-red-100 text-red-800';
+		return status === 'OPEN' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
 	};
-	
+
 	const getActionBadge = (action: string) => {
 		switch (action) {
 			case 'PERIOD_START':
@@ -162,13 +168,13 @@
 		<div class="mb-8">
 			<h2 class="text-xl font-semibold text-gray-800 mb-4">Data Export</h2>
 			<div class="flex flex-wrap gap-4">
-				<button 
+				<button
 					on:click={downloadTransactionsCSV}
 					class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors"
 				>
 					📊 Export Transactions CSV
 				</button>
-				<button 
+				<button
 					on:click={downloadFundsCSV}
 					class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors"
 				>
@@ -189,11 +195,26 @@
 					<table class="w-full">
 						<thead class="bg-gray-50">
 							<tr>
-								<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
-								<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-								<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Started</th>
-								<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Closed</th>
-								<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>Period</th
+								>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>Status</th
+								>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>Started</th
+								>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>Closed</th
+								>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>Actions</th
+								>
 							</tr>
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-200">
@@ -203,7 +224,11 @@
 										{period.year}-{period.month.toString().padStart(2, '0')}
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap">
-										<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {getStatusBadge(period.status)}">
+										<span
+											class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {getStatusBadge(
+												period.status
+											)}"
+										>
 											{period.status}
 										</span>
 									</td>
@@ -215,14 +240,14 @@
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
 										{#if period.status === 'OPEN'}
-											<button 
+											<button
 												on:click={() => closePeriod(period)}
 												class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors"
 											>
 												Close
 											</button>
 										{:else}
-											<button 
+											<button
 												on:click={() => reopenPeriod(period)}
 												class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs transition-colors"
 											>
@@ -240,8 +265,8 @@
 
 		<!-- Audit Log Toggle -->
 		<div class="mb-4">
-			<button 
-				on:click={() => showAuditLogs = !showAuditLogs}
+			<button
+				on:click={() => (showAuditLogs = !showAuditLogs)}
 				class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
 			>
 				{showAuditLogs ? 'Hide' : 'Show'} Audit Logs
@@ -261,9 +286,18 @@
 						<table class="w-full">
 							<thead class="bg-gray-50">
 								<tr>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>Date</th
+									>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>Action</th
+									>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>Details</th
+									>
 								</tr>
 							</thead>
 							<tbody class="bg-white divide-y divide-gray-200">
@@ -273,7 +307,11 @@
 											{formatDate(log.createdAt)}
 										</td>
 										<td class="px-6 py-4 whitespace-nowrap">
-											<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {getActionBadge(log.action)}">
+											<span
+												class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {getActionBadge(
+													log.action
+												)}"
+											>
 												{log.action}
 											</span>
 										</td>

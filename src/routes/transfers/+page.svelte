@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	
+
 	let funds: any[] = [];
 	let fromFundId = '';
 	let toFundId = '';
@@ -9,13 +9,13 @@
 	let loading = true;
 	let submitting = false;
 	let errors: { [key: string]: string } = {};
-	
+
 	onMount(async () => {
 		try {
 			const response = await fetch('/api/funds');
 			const data = await response.json();
 			funds = data.funds || [];
-			
+
 			// Set default selections if we have funds
 			if (funds.length >= 2) {
 				fromFundId = funds[0].id;
@@ -27,45 +27,45 @@
 			loading = false;
 		}
 	});
-	
+
 	const validateForm = () => {
 		errors = {};
-		
+
 		if (!fromFundId) {
 			errors.fromFundId = 'Please select a source fund';
 		}
-		
+
 		if (!toFundId) {
 			errors.toFundId = 'Please select a destination fund';
 		}
-		
+
 		if (fromFundId === toFundId) {
 			errors.toFundId = 'Cannot transfer to the same fund';
 		}
-		
+
 		if (!amount || parseFloat(amount) <= 0) {
 			errors.amount = 'Please enter a valid amount';
 		}
-		
+
 		// Check if source fund has sufficient balance
-		const fromFund = funds.find(f => f.id === fromFundId);
+		const fromFund = funds.find((f) => f.id === fromFundId);
 		if (fromFund && amount) {
 			const amountCents = Math.round(parseFloat(amount) * 100);
 			if (fromFund.balance < amountCents) {
 				errors.amount = `Insufficient funds. Available: $${(fromFund.balance / 100).toFixed(2)}`;
 			}
 		}
-		
+
 		return Object.keys(errors).length === 0;
 	};
-	
+
 	const handleTransfer = async () => {
 		if (!validateForm()) {
 			return;
 		}
-		
+
 		submitting = true;
-		
+
 		try {
 			const response = await fetch('/api/transfers', {
 				method: 'POST',
@@ -77,9 +77,9 @@
 					note
 				})
 			});
-			
+
 			const result = await response.json();
-			
+
 			if (response.ok) {
 				alert(result.message);
 				// Reset form
@@ -100,15 +100,15 @@
 			submitting = false;
 		}
 	};
-	
+
 	const getFund = (fundId: string) => {
-		return funds.find(f => f.id === fundId);
+		return funds.find((f) => f.id === fundId);
 	};
-	
+
 	const getAvailableFunds = (excludeId?: string) => {
-		return funds.filter(f => f.id !== excludeId);
+		return funds.filter((f) => f.id !== excludeId);
 	};
-	
+
 	$: fromFund = getFund(fromFundId);
 	$: toFund = getFund(toFundId);
 </script>
@@ -131,7 +131,10 @@
 		<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
 			<h3 class="text-lg font-semibold text-yellow-800 mb-2">Not enough funds</h3>
 			<p class="text-yellow-700 mb-4">You need at least 2 funds to make transfers.</p>
-			<a href="/funds/create" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition-colors">
+			<a
+				href="/funds/create"
+				class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition-colors"
+			>
 				Create Another Fund
 			</a>
 		</div>
@@ -144,17 +147,18 @@
 						<label for="fromFund" class="block text-sm font-medium text-gray-700 mb-2">
 							From Fund
 						</label>
-						<select 
+						<select
 							id="fromFund"
 							bind:value={fromFundId}
-							on:change={() => errors.fromFundId = ''}
+							on:change={() => (errors.fromFundId = '')}
 							class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
 							class:border-red-500={errors.fromFundId}
 						>
 							<option value="">Select source fund</option>
 							{#each funds as fund}
 								<option value={fund.id}>
-									{fund.icon} {fund.name} - ${(fund.balance / 100).toFixed(2)}
+									{fund.icon}
+									{fund.name} - ${(fund.balance / 100).toFixed(2)}
 								</option>
 							{/each}
 						</select>
@@ -173,17 +177,18 @@
 						<label for="toFund" class="block text-sm font-medium text-gray-700 mb-2">
 							To Fund
 						</label>
-						<select 
+						<select
 							id="toFund"
 							bind:value={toFundId}
-							on:change={() => errors.toFundId = ''}
+							on:change={() => (errors.toFundId = '')}
 							class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
 							class:border-red-500={errors.toFundId}
 						>
 							<option value="">Select destination fund</option>
 							{#each getAvailableFunds(fromFundId) as fund}
 								<option value={fund.id}>
-									{fund.icon} {fund.name} - ${(fund.balance / 100).toFixed(2)}
+									{fund.icon}
+									{fund.name} - ${(fund.balance / 100).toFixed(2)}
 								</option>
 							{/each}
 						</select>
@@ -206,17 +211,17 @@
 							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 								<span class="text-gray-500">$</span>
 							</div>
-							<input 
-								type="number" 
+							<input
+								type="number"
 								id="amount"
 								step="0.01"
 								min="0.01"
 								bind:value={amount}
-								on:input={() => errors.amount = ''}
+								on:input={() => (errors.amount = '')}
 								placeholder="0.00"
 								class="w-full pl-8 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
 								class:border-red-500={errors.amount}
-							>
+							/>
 						</div>
 						{#if errors.amount}
 							<p class="mt-1 text-sm text-red-600">{errors.amount}</p>
@@ -228,7 +233,7 @@
 						<label for="note" class="block text-sm font-medium text-gray-700 mb-2">
 							Note (Optional)
 						</label>
-						<textarea 
+						<textarea
 							id="note"
 							bind:value={note}
 							rows="3"
@@ -260,14 +265,14 @@
 
 					<!-- Action Buttons -->
 					<div class="flex space-x-4">
-						<button 
+						<button
 							type="submit"
 							disabled={submitting}
 							class="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-2 px-4 rounded-md transition-colors font-semibold"
 						>
 							{submitting ? 'Processing...' : 'Execute Transfer'}
 						</button>
-						<button 
+						<button
 							type="button"
 							on:click={() => window.history.back()}
 							class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md transition-colors"
