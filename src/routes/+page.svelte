@@ -10,14 +10,19 @@
 	onMount(async () => {
 		try {
 			// Load funds from API
-			const response = await fetch('/api/funds');
-			const data = await response.json();
-			funds = data.funds || [];
+			const fundsResponse = await fetch('/api/funds');
+			const fundsData = await fundsResponse.json();
+			funds = fundsData.funds || [];
+			
+			// Load recent transactions
+			const transactionsResponse = await fetch('/api/transactions');
+			const transactionsData = await transactionsResponse.json();
+			recentTransactions = (transactionsData.transactions || []).slice(0, 5); // Show only 5 most recent
 			
 			// Calculate total balance
 			totalBalance = funds.reduce((sum, fund) => sum + fund.balance, 0);
 		} catch (error) {
-			console.error('Error loading funds:', error);
+			console.error('Error loading data:', error);
 		} finally {
 			loading = false;
 		}
@@ -26,6 +31,40 @@
 	const handleCreateFund = () => {
 		// Navigate to fund creation page
 		window.location.href = '/funds/create';
+	};
+	
+	const handleAddTransaction = () => {
+		// Navigate to transaction creation page
+		window.location.href = '/transactions/create';
+	};
+	
+	const getFundById = (fundId: string) => {
+		return funds.find(f => f.id === fundId);
+	};
+	
+	const formatTransactionAmount = (transaction: any) => {
+		const amount = (transaction.amountCents / 100).toFixed(2);
+		switch (transaction.type) {
+			case 'EXPENSE':
+				return `-$${amount}`;
+			case 'INCOME':
+			case 'ALLOCATION':
+				return `+$${amount}`;
+			default:
+				return `$${amount}`;
+		}
+	};
+	
+	const getTransactionTypeColor = (type: string) => {
+		switch (type) {
+			case 'EXPENSE':
+				return 'text-red-600';
+			case 'INCOME':
+			case 'ALLOCATION':
+				return 'text-green-600';
+			default:
+				return 'text-gray-600';
+		}
 	};
 </script>
 
@@ -66,7 +105,9 @@
 				class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
 				Add Fund
 			</button>
-			<button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+			<button 
+				on:click={handleAddTransaction}
+				class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
 				Add Transaction
 			</button>
 			<button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors">
@@ -127,9 +168,18 @@
 	<!-- Recent Transactions -->
 	<div>
 		<h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Transactions</h2>
-		{#if recentTransactions.length === 0}
+		{#if loading}
 			<div class="bg-gray-50 rounded-lg p-6 text-center">
-				<p class="text-gray-500">No transactions yet.</p>
+				<p class="text-gray-500">Loading transactions...</p>
+			</div>
+		{:else if recentTransactions.length === 0}
+			<div class="bg-gray-50 rounded-lg p-6 text-center">
+				<p class="text-gray-500 mb-4">No transactions yet.</p>
+				<button 
+					on:click={handleAddTransaction}
+					class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+					Add Your First Transaction
+				</button>
 			</div>
 		{:else}
 			<div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -144,14 +194,32 @@
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-200">
 						{#each recentTransactions as transaction}
+							{@const fund = getFundById(transaction.fundId)}
 							<tr>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 									{new Date(transaction.date).toLocaleDateString()}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.fund}</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.description}</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
-									${(transaction.amount / 100).toFixed(2)}
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+									{#if fund}
+										{fund.icon} {fund.name}
+									{:else}
+										Unknown Fund
+									{/if}
+								</td>
+								<td class="px-6 py-4 text-sm text-gray-900">
+									<div>
+										{#if transaction.payee}
+											<span class="font-medium">{transaction.payee}</span>
+										{:else}
+											<span class="text-gray-500">{transaction.type}</span>
+										{/if}
+									</div>
+									{#if transaction.note}
+										<div class="text-gray-500 text-xs mt-1">{transaction.note}</div>
+									{/if}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium {getTransactionTypeColor(transaction.type)}">
+									{formatTransactionAmount(transaction)}
 								</td>
 							</tr>
 						{/each}
