@@ -104,6 +104,18 @@
 				return 'text-gray-600';
 		}
 	};
+
+	const getTransactionTypeDarkColor = (type: string) => {
+		switch (type) {
+			case 'EXPENSE':
+				return 'dark:text-red-400';
+			case 'INCOME':
+			case 'ALLOCATION':
+				return 'dark:text-green-400';
+			default:
+				return 'dark:text-gray-400';
+		}
+	};
 </script>
 
 <svelte:head>
@@ -327,82 +339,80 @@
 	<div>
 		<h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Recent Transactions</h2>
 		{#if loading}
-			<div class="bg-gray-50 rounded-lg p-6 text-center">
-				<p class="text-gray-500">Loading transactions...</p>
+			<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+				<p class="text-gray-500 dark:text-gray-400">Loading transactions...</p>
 			</div>
 		{:else if recentTransactions.length === 0}
-			<div class="bg-gray-50 rounded-lg p-6 text-center">
-				<p class="text-gray-500 mb-4">No transactions yet.</p>
+			<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+				<p class="text-gray-500 dark:text-gray-400 mb-4">No transactions yet.</p>
 				<button
 					on:click={handleAddTransaction}
-					class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors"
+					class="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
 				>
 					Add Your First Transaction
 				</button>
 			</div>
 		{:else}
-			<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+			<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
 				<table class="w-full">
-					<thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+					<thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600">
 						<tr>
 							<th
-								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
 								>Date</th
 							>
 							<th
-								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
 								>Fund</th
 							>
 							<th
-								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
 								>Description</th
 							>
 							<th
-								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
 								>Amount</th
 							>
 						</tr>
 					</thead>
-					<tbody class="bg-white divide-y divide-gray-100">
+					<tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
 						{#each recentTransactions as transaction, index}
 							{@const fund = getFundById(transaction.fundId)}
 							<tr
-								class="hover:bg-gray-50 transition-colors duration-200"
+								class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
 								style="animation-delay: {index * 100}ms;"
 							>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 font-medium">
 									{new Date(transaction.date).toLocaleDateString()}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
 									{#if fund}
 										<div class="flex items-center space-x-2">
 											<span class="text-lg">{fund.icon}</span>
 											<span class="font-medium">{fund.name}</span>
 										</div>
 									{:else}
-										<span class="text-gray-500">Unknown Fund</span>
+										<span class="text-gray-500 dark:text-gray-400">Unknown Fund</span>
 									{/if}
 								</td>
-								<td class="px-6 py-4 text-sm text-gray-900">
+								<td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
 									<div>
 										{#if transaction.payee}
-											<span class="font-medium text-gray-900">{transaction.payee}</span>
+											<span class="font-medium text-gray-900 dark:text-gray-200">{transaction.payee}</span>
 										{:else}
-											<span class="text-gray-500 capitalize"
+											<span class="text-gray-500 dark:text-gray-400 capitalize"
 												>{transaction.type.toLowerCase().replace('_', ' ')}</span
 											>
 										{/if}
 									</div>
 									{#if transaction.note}
-										<div class="text-gray-500 text-xs mt-1 leading-relaxed">{transaction.note}</div>
+										<div class="text-gray-500 dark:text-gray-400 text-xs mt-1 leading-relaxed">{transaction.note}</div>
 									{/if}
 								</td>
 								<td
-									class="px-6 py-4 whitespace-nowrap text-sm font-bold {getTransactionTypeColor(
-										transaction.type
-									)}"
+									class="px-6 py-4 whitespace-nowrap text-sm font-bold"
 								>
-									<div class="flex items-center space-x-1">
+									<div class="flex items-center space-x-1 {getTransactionTypeColor(transaction.type)} {getTransactionTypeDarkColor(transaction.type)}">
 										<span>{formatTransactionAmount(transaction)}</span>
 										{#if transaction.type === 'TRANSFER_IN' || transaction.type === 'ALLOCATION'}
 											<span class="text-green-500">↗️</span>
