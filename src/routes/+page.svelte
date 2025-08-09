@@ -155,6 +155,9 @@
 				class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
 				Start New Month
 			</button>
+			<button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors">
+				<a href="/periods" class="text-white no-underline">Manage Periods</a>
+			</button>
 		</div>
 	</div>
 
