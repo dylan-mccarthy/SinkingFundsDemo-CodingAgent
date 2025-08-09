@@ -112,9 +112,7 @@
 
 <div class="container mx-auto px-4 py-8 max-w-7xl">
 	<header class="mb-8">
-		<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-			Sinking Funds Manager
-		</h1>
+		<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Sinking Funds Manager</h1>
 		<p class="text-gray-600 dark:text-gray-400">
 			Track your spending and build your savings with smart fund allocation
 		</p>
@@ -192,7 +190,9 @@
 				class="group relative bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 dark:from-indigo-600 dark:to-indigo-700 dark:hover:from-indigo-700 dark:hover:to-indigo-800 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800"
 			>
 				<a href="/transfers" class="text-white no-underline">
-					<div class="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200">🔄</div>
+					<div class="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200">
+						🔄
+					</div>
 					<div class="text-sm font-semibold">Transfer Funds</div>
 				</a>
 			</button>
@@ -207,7 +207,9 @@
 				class="group relative bg-gradient-to-br from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-800 dark:hover:to-gray-900 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
 			>
 				<a href="/periods" class="text-white no-underline">
-					<div class="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200">⏰</div>
+					<div class="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200">
+						⏰
+					</div>
 					<div class="text-sm font-semibold">Manage Periods</div>
 				</a>
 			</button>
@@ -251,7 +253,9 @@
 									{fund.icon}
 								</span>
 								<div>
-									<h3 class="font-bold text-gray-800 dark:text-gray-200 text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+									<h3
+										class="font-bold text-gray-800 dark:text-gray-200 text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+									>
 										{fund.name}
 									</h3>
 									<div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
