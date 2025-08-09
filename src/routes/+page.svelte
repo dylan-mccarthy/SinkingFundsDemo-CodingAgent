@@ -1,11 +1,13 @@
 <script lang="ts">
 	// Dashboard page for Sinking Funds Manager
 	import { onMount } from 'svelte';
+	import GamificationPanel from '$lib/components/GamificationPanel.svelte';
 	
 	let funds: any[] = [];
 	let totalBalance = 0;
 	let recentTransactions: any[] = [];
 	let loading = true;
+	let showCelebration = false;
 	
 	onMount(async () => {
 		try {
@@ -113,50 +115,67 @@
 	</header>
 
 	<!-- Summary Cards -->
-	<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-		<div class="bg-white rounded-lg shadow-md p-6">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">Total Balance</h3>
 			<p class="text-3xl font-bold text-green-600">${(totalBalance / 100).toFixed(2)}</p>
 		</div>
 		
-		<div class="bg-white rounded-lg shadow-md p-6">
+		<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">Active Funds</h3>
 			<p class="text-3xl font-bold text-blue-600">{funds.length}</p>
 		</div>
 		
-		<div class="bg-white rounded-lg shadow-md p-6">
+		<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
 			<h3 class="text-lg font-semibold text-gray-800 mb-2">This Month</h3>
 			<p class="text-3xl font-bold text-purple-600">$0.00</p>
+		</div>
+		
+		<!-- Gamification Panel -->
+		<div class="md:col-span-1">
+			<GamificationPanel {showCelebration} />
 		</div>
 	</div>
 
 	<!-- Quick Actions -->
 	<div class="mb-8">
-		<h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-		<div class="flex flex-wrap gap-4">
+		<h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 			<button 
 				on:click={handleCreateFund}
-				class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
-				Add Fund
+				class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<div class="text-2xl mb-2">💰</div>
+				<div class="text-sm font-semibold">Add Fund</div>
 			</button>
 			<button 
 				on:click={handleAddTransaction}
-				class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
-				Add Transaction
+				class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<div class="text-2xl mb-2">📝</div>
+				<div class="text-sm font-semibold">Add Transaction</div>
 			</button>
-			<button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors">
-				<a href="/allocations" class="text-white no-underline">Manage Allocations</a>
+			<button class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<a href="/allocations" class="text-white no-underline">
+					<div class="text-2xl mb-2">⚖️</div>
+					<div class="text-sm font-semibold">Manage Allocations</div>
+				</a>
 			</button>
-			<button class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors">
-				<a href="/transfers" class="text-white no-underline">Transfer Between Funds</a>
+			<button class="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<a href="/transfers" class="text-white no-underline">
+					<div class="text-2xl mb-2">🔄</div>
+					<div class="text-sm font-semibold">Transfer Funds</div>
+				</a>
 			</button>
 			<button 
 				on:click={handleStartNewMonth}
-				class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
-				Start New Month
+				class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<div class="text-2xl mb-2">📅</div>
+				<div class="text-sm font-semibold">Start New Month</div>
 			</button>
-			<button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors">
-				<a href="/periods" class="text-white no-underline">Manage Periods</a>
+			<button class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+				<a href="/periods" class="text-white no-underline">
+					<div class="text-2xl mb-2">⏰</div>
+					<div class="text-sm font-semibold">Manage Periods</div>
+				</a>
 			</button>
 		</div>
 	</div>
@@ -178,32 +197,61 @@
 				</button>
 			</div>
 		{:else}
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{#each funds as fund}
-					<div class="bg-white rounded-lg shadow-md p-6 border-l-4 hover:shadow-lg transition-shadow cursor-pointer" 
+					<div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1" 
 					     style="border-left-color: {fund.color}"
 					     on:click={() => window.location.href = `/funds/${fund.id}`}>
-						<div class="flex items-start justify-between mb-2">
-							<h3 class="font-semibold text-gray-800">{fund.name}</h3>
-							<span class="text-2xl">{fund.icon}</span>
-						</div>
-						<p class="text-2xl font-bold text-green-600 mb-2">${(fund.balance / 100).toFixed(2)}</p>
-						{#if fund.targetCents > 0}
-							<div class="mb-2">
-								<div class="flex justify-between text-sm text-gray-600 mb-1">
-									<span>Progress</span>
-									<span>${(fund.targetCents / 100).toFixed(2)} goal</span>
-								</div>
-								<div class="w-full bg-gray-200 rounded-full h-2">
-									<div 
-										class="bg-blue-600 h-2 rounded-full" 
-										style="width: {Math.min(100, (fund.balance / fund.targetCents) * 100)}%">
+						<div class="flex items-start justify-between mb-4">
+							<div class="flex items-center space-x-3">
+								<span class="text-3xl">{fund.icon}</span>
+								<div>
+									<h3 class="font-bold text-gray-800 text-lg">{fund.name}</h3>
+									<div class="flex items-center space-x-2 text-sm text-gray-500">
+										<span>Level {Math.floor(fund.balance / 50000) || 1}</span>
+										<span>•</span>
+										<span>Click for details</span>
 									</div>
 								</div>
 							</div>
-						{/if}
-						<p class="text-sm text-gray-600">{fund.description}</p>
-						<div class="mt-2 text-xs text-gray-400">Click for details</div>
+						</div>
+						
+						<div class="mb-4">
+							<p class="text-3xl font-bold text-green-600 mb-2">${(fund.balance / 100).toFixed(2)}</p>
+							{#if fund.targetCents > 0}
+								<div class="mb-3">
+									<div class="flex justify-between text-sm text-gray-600 mb-2">
+										<span>Progress to Goal</span>
+										<span>${(fund.targetCents / 100).toFixed(2)}</span>
+									</div>
+									<div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+										<div 
+											class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out" 
+											style="width: {Math.min(100, (fund.balance / fund.targetCents) * 100)}%">
+										</div>
+									</div>
+									<div class="text-xs text-gray-500 mt-1 text-right">
+										{Math.min(100, (fund.balance / fund.targetCents) * 100).toFixed(1)}%
+									</div>
+								</div>
+							{/if}
+							<p class="text-sm text-gray-600 leading-relaxed">{fund.description}</p>
+						</div>
+						
+						<!-- Fund Level Indicator -->
+						<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+							<div class="flex items-center space-x-2">
+								<span class="text-lg">
+									{#if fund.balance >= 500000}🏆{:else if fund.balance >= 250000}🌳{:else if fund.balance >= 100000}🌿{:else}🌱{/if}
+								</span>
+								<span class="text-xs text-gray-500">
+									Level {Math.max(1, Math.floor(fund.balance / 50000))}
+								</span>
+							</div>
+							{#if fund.balance >= fund.targetCents && fund.targetCents > 0}
+								<span class="text-lg animate-pulse">🎉</span>
+							{/if}
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -227,44 +275,54 @@
 				</button>
 			</div>
 		{:else}
-			<div class="bg-white rounded-lg shadow-md overflow-hidden">
+			<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 				<table class="w-full">
-					<thead class="bg-gray-50">
+					<thead class="bg-gradient-to-r from-gray-50 to-gray-100">
 						<tr>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fund</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fund</th>
+							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
+							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
 						</tr>
 					</thead>
-					<tbody class="bg-white divide-y divide-gray-200">
-						{#each recentTransactions as transaction}
+					<tbody class="bg-white divide-y divide-gray-100">
+						{#each recentTransactions as transaction, index}
 							{@const fund = getFundById(transaction.fundId)}
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+							<tr class="hover:bg-gray-50 transition-colors duration-200" style="animation-delay: {index * 100}ms;">
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
 									{new Date(transaction.date).toLocaleDateString()}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 									{#if fund}
-										{fund.icon} {fund.name}
+										<div class="flex items-center space-x-2">
+											<span class="text-lg">{fund.icon}</span>
+											<span class="font-medium">{fund.name}</span>
+										</div>
 									{:else}
-										Unknown Fund
+										<span class="text-gray-500">Unknown Fund</span>
 									{/if}
 								</td>
 								<td class="px-6 py-4 text-sm text-gray-900">
 									<div>
 										{#if transaction.payee}
-											<span class="font-medium">{transaction.payee}</span>
+											<span class="font-medium text-gray-900">{transaction.payee}</span>
 										{:else}
-											<span class="text-gray-500">{transaction.type}</span>
+											<span class="text-gray-500 capitalize">{transaction.type.toLowerCase().replace('_', ' ')}</span>
 										{/if}
 									</div>
 									{#if transaction.note}
-										<div class="text-gray-500 text-xs mt-1">{transaction.note}</div>
+										<div class="text-gray-500 text-xs mt-1 leading-relaxed">{transaction.note}</div>
 									{/if}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium {getTransactionTypeColor(transaction.type)}">
-									{formatTransactionAmount(transaction)}
+								<td class="px-6 py-4 whitespace-nowrap text-sm font-bold {getTransactionTypeColor(transaction.type)}">
+									<div class="flex items-center space-x-1">
+										<span>{formatTransactionAmount(transaction)}</span>
+										{#if transaction.type === 'TRANSFER_IN' || transaction.type === 'ALLOCATION'}
+											<span class="text-green-500">↗️</span>
+										{:else if transaction.type === 'TRANSFER_OUT' || transaction.type === 'EXPENSE'}
+											<span class="text-red-500">↘️</span>
+										{/if}
+									</div>
 								</td>
 							</tr>
 						{/each}
