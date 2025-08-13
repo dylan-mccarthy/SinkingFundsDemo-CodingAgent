@@ -136,7 +136,9 @@
 				<div class="text-xs text-gray-600 dark:text-gray-400">Month Streak</div>
 			</div>
 			<div class="text-center">
-				<div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{gamificationData.badges.length}</div>
+				<div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+					{gamificationData.badges.length}
+				</div>
 				<div class="text-xs text-gray-600 dark:text-gray-400">Badges Earned</div>
 			</div>
 			<div class="text-center">
@@ -149,8 +151,13 @@
 
 		<!-- Badges -->
 		{#if showBadges}
-			<div class="mt-4 border-t border-purple-200 dark:border-purple-600 pt-4" transition:fly={{ y: 20, duration: 300 }}>
-				<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">🏆 Badges Earned</h4>
+			<div
+				class="mt-4 border-t border-purple-200 dark:border-purple-600 pt-4"
+				transition:fly={{ y: 20, duration: 300 }}
+			>
+				<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+					🏆 Badges Earned
+				</h4>
 				{#if gamificationData.badges.length === 0}
 					<div class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
 						No badges earned yet. Keep saving to unlock achievements!
@@ -165,7 +172,9 @@
 								<div class="flex items-center space-x-2">
 									<span class="text-2xl">{badge.emoji}</span>
 									<div>
-										<div class="text-sm font-semibold text-gray-800 dark:text-gray-200">{badge.name}</div>
+										<div class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+											{badge.name}
+										</div>
 										<div class="text-xs text-gray-600 dark:text-gray-400">{badge.description}</div>
 									</div>
 								</div>
