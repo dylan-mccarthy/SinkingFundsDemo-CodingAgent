@@ -170,7 +170,9 @@
 <div class="container mx-auto px-4 py-8">
 	<header class="mb-8">
 		<h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Allocation Rules</h1>
-		<p class="text-gray-600 dark:text-gray-300">Configure how your monthly deposits are allocated to funds</p>
+		<p class="text-gray-600 dark:text-gray-300">
+			Configure how your monthly deposits are allocated to funds
+		</p>
 	</header>
 
 	{#if loading}
@@ -182,13 +184,17 @@
 			<!-- Rules Editor -->
 			<div class="space-y-6">
 				<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Fund Allocation Rules</h2>
+					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+						Fund Allocation Rules
+					</h2>
 
 					<div class="space-y-4">
 						{#each allocationRules as rule, index}
 							{@const fund = funds.find((f) => f.id === rule.fundId)}
 							{#if fund}
-								<div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700">
+								<div
+									class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700"
+								>
 									<div class="flex items-center justify-between mb-3">
 										<div class="flex items-center space-x-2">
 											<span class="text-2xl">{fund.icon}</span>
@@ -207,7 +213,9 @@
 
 									<div class="grid grid-cols-2 gap-4">
 										<div>
-											<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode</label>
+											<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+												>Mode</label
+											>
 											<select
 												bind:value={rule.mode}
 												on:change={() => updateRuleValue(index, 'mode', rule.mode)}
@@ -221,7 +229,8 @@
 
 										{#if rule.mode === 'percent'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+												<label
+													class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
 													>Percentage</label
 												>
 												<div class="flex items-center">
@@ -244,7 +253,10 @@
 											</div>
 										{:else if rule.mode === 'fixed'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
+												<label
+													class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+													>Amount</label
+												>
 												<div class="flex items-center">
 													<span class="text-gray-500 dark:text-gray-400 mr-1">$</span>
 													<input
@@ -264,7 +276,10 @@
 											</div>
 										{:else if rule.mode === 'priority'}
 											<div>
-												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priority</label>
+												<label
+													class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+													>Priority</label
+												>
 												<input
 													type="number"
 													min="1"
@@ -295,10 +310,14 @@
 			<!-- Preview Panel -->
 			<div class="space-y-6">
 				<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Allocation Preview</h2>
+					<h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+						Allocation Preview
+					</h2>
 
 					<div class="mb-4">
-						<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deposit Amount</label>
+						<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+							>Deposit Amount</label
+						>
 						<div class="flex items-center">
 							<span class="text-gray-500 dark:text-gray-400 mr-2">$</span>
 							<input
@@ -322,11 +341,17 @@
 							</div>
 
 							{#each preview.allocations as allocation}
-								<div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+								<div
+									class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+								>
 									<div class="flex items-center space-x-2">
 										<span class="text-xl">{getFundIcon(allocation.fundId)}</span>
-										<span class="font-medium text-gray-800 dark:text-white">{allocation.fundName}</span>
-										<span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded text-gray-600 dark:text-gray-300">
+										<span class="font-medium text-gray-800 dark:text-white"
+											>{allocation.fundName}</span
+										>
+										<span
+											class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded text-gray-600 dark:text-gray-300"
+										>
 											{allocation.mode}
 											{#if allocation.percentBp}
 												({(allocation.percentBp / 100).toFixed(1)}%)
@@ -342,7 +367,9 @@
 							<div class="border-t border-gray-200 dark:border-gray-600 pt-3 mt-4">
 								<div class="flex justify-between text-sm">
 									<span class="text-gray-700 dark:text-gray-300">Total Allocated:</span>
-									<span class="font-semibold text-gray-900 dark:text-white">${(preview.totalAllocated / 100).toFixed(2)}</span>
+									<span class="font-semibold text-gray-900 dark:text-white"
+										>${(preview.totalAllocated / 100).toFixed(2)}</span
+									>
 								</div>
 								{#if preview.remainingAmount > 0}
 									<div class="flex justify-between text-sm text-orange-600 dark:text-orange-400">
@@ -362,7 +389,9 @@
 							</button>
 						</div>
 					{:else}
-						<div class="text-center text-gray-500 dark:text-gray-400 py-8">Enter a deposit amount to see preview</div>
+						<div class="text-center text-gray-500 dark:text-gray-400 py-8">
+							Enter a deposit amount to see preview
+						</div>
 					{/if}
 				</div>
 			</div>

@@ -355,7 +355,9 @@
 		{:else}
 			<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
 				<table class="w-full">
-					<thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600">
+					<thead
+						class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600"
+					>
 						<tr>
 							<th
 								class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
@@ -382,7 +384,9 @@
 								class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
 								style="animation-delay: {index * 100}ms;"
 							>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 font-medium">
+								<td
+									class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 font-medium"
+								>
 									{new Date(transaction.date).toLocaleDateString()}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
@@ -398,7 +402,9 @@
 								<td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
 									<div>
 										{#if transaction.payee}
-											<span class="font-medium text-gray-900 dark:text-gray-200">{transaction.payee}</span>
+											<span class="font-medium text-gray-900 dark:text-gray-200"
+												>{transaction.payee}</span
+											>
 										{:else}
 											<span class="text-gray-500 dark:text-gray-400 capitalize"
 												>{transaction.type.toLowerCase().replace('_', ' ')}</span
@@ -406,13 +412,17 @@
 										{/if}
 									</div>
 									{#if transaction.note}
-										<div class="text-gray-500 dark:text-gray-400 text-xs mt-1 leading-relaxed">{transaction.note}</div>
+										<div class="text-gray-500 dark:text-gray-400 text-xs mt-1 leading-relaxed">
+											{transaction.note}
+										</div>
 									{/if}
 								</td>
-								<td
-									class="px-6 py-4 whitespace-nowrap text-sm font-bold"
-								>
-									<div class="flex items-center space-x-1 {getTransactionTypeColor(transaction.type)} {getTransactionTypeDarkColor(transaction.type)}">
+								<td class="px-6 py-4 whitespace-nowrap text-sm font-bold">
+									<div
+										class="flex items-center space-x-1 {getTransactionTypeColor(
+											transaction.type
+										)} {getTransactionTypeDarkColor(transaction.type)}"
+									>
 										<span>{formatTransactionAmount(transaction)}</span>
 										{#if transaction.type === 'TRANSFER_IN' || transaction.type === 'ALLOCATION'}
 											<span class="text-green-500">↗️</span>
